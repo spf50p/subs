@@ -26,6 +26,21 @@ subs -v, --version         # show version
 The server listens on the configured `port` (default `9876`) and handles **GET**
 requests only (anything else returns `405`).
 
+### systemd
+
+A hardened example unit is provided in [`subs.service`](subs.service). It runs as
+the `subs` user/group, reads `/etc/subs.yaml`, and uses `StateDirectory=subs` to
+create and own `/var/lib/subs` (set `work_dir: /var/lib/subs` in the config).
+
+```sh
+sudo useradd --system --no-create-home --shell /usr/sbin/nologin subs
+sudo install -m 0755 .bin/subs /usr/local/bin/subs
+sudo install -m 0640 -o subs -g subs your-config.yaml /etc/subs.yaml
+sudo cp subs.service /etc/systemd/system/subs.service
+sudo systemctl daemon-reload
+sudo systemctl enable --now subs
+```
+
 ## Configuration
 
 Config is YAML. Lookup precedence: the path passed as an argument, then

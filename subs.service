@@ -1,0 +1,49 @@
+[Unit]
+Description=subs — per-UUID VPN subscription page server
+Documentation=https://github.com/spf50p/subs
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=subs
+Group=subs
+
+# Adjust to wherever the binary is installed.
+ExecStart=/usr/local/bin/subs /etc/subs.yaml
+Restart=on-failure
+RestartSec=2
+
+# Creates and owns /var/lib/subs (mode 0750) for subs:subs on start.
+# Point work_dir at this path in /etc/subs.yaml:  work_dir: /var/lib/subs
+StateDirectory=subs
+StateDirectoryMode=0750
+WorkingDirectory=/var/lib/subs
+
+# Hardening. /var/lib/subs stays writable via StateDirectory; everything else
+# is read-only or inaccessible.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectKernelLogs=true
+ProtectClock=true
+ProtectHostname=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target
