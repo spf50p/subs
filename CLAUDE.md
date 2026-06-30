@@ -19,15 +19,18 @@ make vet                           # go vet ./...
 make clean                         # remove .bin/
 
 go run . [path/to/config.yaml]     # run directly (config arg is optional)
+go run . -h | --help               # show usage
+go run . -v | --version            # show version (main.go `version` var)
 ```
 
 The server listens on the config's `port` (default `defaultPort` = 9876, in `main.go`;
-resolved by `Config.listenAddr`). Build output goes to `.bin/`.
+resolved by `Config.listenAddr`). Build output goes to `.bin/`. `-h`/`-v` are
+handled in `main` (via `usage()`) before any config lookup and exit immediately.
 
 ## Configuration
 
 Config is YAML. Search precedence (`locateConfig` in config.go): explicit CLI
-argument → `./.subs.yaml` → `~/.subs.yaml`.
+argument → `./.subs.yaml` → `~/.subs.yaml` → `/etc/subs.yaml`.
 
 ```yaml
 host: 127.0.0.1        # optional, defaults to 127.0.0.1 (bind behind a reverse proxy)

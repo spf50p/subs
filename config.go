@@ -73,7 +73,7 @@ func (c *Config) resolvedWorkDir() string {
 }
 
 // locateConfig returns the config path to use. Precedence: explicit argument,
-// then ./.subs.yaml, then ~/.subs.yaml.
+// then ./.subs.yaml, then ~/.subs.yaml, then /etc/subs.yaml.
 func locateConfig(arg string) (string, error) {
 	if arg != "" {
 		if _, err := os.Stat(arg); err != nil {
@@ -86,12 +86,13 @@ func locateConfig(arg string) (string, error) {
 	if home, err := os.UserHomeDir(); err == nil {
 		candidates = append(candidates, filepath.Join(home, ".subs.yaml"))
 	}
+	candidates = append(candidates, "/etc/subs.yaml")
 	for _, p := range candidates {
 		if _, err := os.Stat(p); err == nil {
 			return p, nil
 		}
 	}
-	return "", fmt.Errorf("no config found (looked for ./.subs.yaml, ~/.subs.yaml); pass one as an argument")
+	return "", fmt.Errorf("no config found (looked for ./.subs.yaml, ~/.subs.yaml, /etc/subs.yaml); pass one as an argument")
 }
 
 // loadConfig reads and parses the config file at path.

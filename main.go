@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -13,10 +14,34 @@ const (
 	defaultMaxUploadMB = 10
 )
 
+var version = "0.1.0"
+
+func usage() {
+	fmt.Printf(`subs %s — per-UUID VPN subscription page server
+
+Usage:
+  subs [config.yaml]    start the server
+  subs -h, --help       show this help
+  subs -v, --version    show version
+
+Config is looked up in this order: the path argument, ./.subs.yaml, ~/.subs.yaml,
+/etc/subs.yaml.
+`, version)
+}
+
 func main() {
 	var arg string
 	if len(os.Args) > 1 {
 		arg = os.Args[1]
+	}
+
+	switch arg {
+	case "-h", "--help":
+		usage()
+		return
+	case "-v", "--version":
+		fmt.Printf("subs %s\n", version)
+		return
 	}
 
 	path, err := locateConfig(arg)

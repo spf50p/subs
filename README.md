@@ -17,8 +17,10 @@ make build-all     # both
 ## Run
 
 ```sh
-subs                       # uses ./.subs.yaml, then ~/.subs.yaml
+subs                       # uses ./.subs.yaml, then ~/.subs.yaml, then /etc/subs.yaml
 subs path/to/config.yaml   # explicit config file
+subs -h, --help            # show usage
+subs -v, --version         # show version
 ```
 
 The server listens on the configured `port` (default `9876`) and handles **GET**
@@ -27,7 +29,7 @@ requests only (anything else returns `405`).
 ## Configuration
 
 Config is YAML. Lookup precedence: the path passed as an argument, then
-`./.subs.yaml`, then `~/.subs.yaml`.
+`./.subs.yaml`, then `~/.subs.yaml`, then `/etc/subs.yaml`.
 
 ```yaml
 host: 127.0.0.1        # optional, defaults to 127.0.0.1
